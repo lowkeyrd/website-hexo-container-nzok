@@ -8,11 +8,11 @@ services:
     actions:
       pre-deploy: # 在deploy之前运行
         # 代码拷贝到nas目录 
-        # - run: cp -r * /mnt/docker-build
-        #   path: ./code
+        - run: cp -r * /mnt/docker-build
+          path: ./code
         # 指定nas目录作为context进行build
-        # - component: fc build --use-docker --dockerfile ./code/Dockerfile --context /mnt/docker-build
-        - component: fc build --use-docker --dockerfile ./code/Dockerfile
+        - component: fc build --use-docker --dockerfile ./code/Dockerfile --context /mnt/docker-build
+        # - component: fc build --use-docker --dockerfile ./code/Dockerfile
     props: #  组件的属性值
       region: 'ap-southeast-1'
       service:
