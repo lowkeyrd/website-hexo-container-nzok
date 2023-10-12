@@ -17,6 +17,7 @@ services:
       service:
         name: 'website'
         description: "Serverless Devs Website Service"
+        role: 'acs:ram::${config(AccountID)}:role/AliyunFcDefaultRole'
       function:
         name: 'hexo-custom-container'
         description: "Serverless Devs Website hexo Function"
