@@ -9,9 +9,9 @@ services:
       pre-deploy: # 在deploy之前运行
         # 先将base镜像预热到缓存目录，--cache-dir 表示缓存目录，--image 表示base镜像，可以指定多个
         # 如果要使用nas，cicd.yaml中的 runnerConfig 要指定 nasConfig，并且将--cache-dir 指定成 nasnCofig.mountDir
-        - run: warmer --image=gcr.io/google-appengine/debian9 --cache-dir=/mnt/docker-build
+        - run: warmer --image=gcr.io/google-appengine/debian9 --cache-dir=/mnt/image-cache
         # 使用缓存目录构建镜像
-        - component: fc build --use-docker --dockerfile ./code/Dockerfile --cache=true --cache-dir=/mnt/docker-build
+        - component: fc build --use-docker --dockerfile ./code/Dockerfile --cache-dir=/mnt/image-cache
     props: #  组件的属性值
       region: 'ap-southeast-1'
       service:
