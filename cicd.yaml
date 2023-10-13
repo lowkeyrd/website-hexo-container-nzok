@@ -35,7 +35,7 @@ spec:
   context:
     data:
       # 环境名称，推荐不同的环境使用不同的流水线模板
-      envName: test
+      envName: default
       deployFile: s.yaml
       runnerConfig:
         regionId: ap-southeast-1
@@ -44,9 +44,9 @@ spec:
           project: serverless-application-9402efc249556e5b
         vpcConfig:
           securityGroupId: sg-t4najwsfsvhbqv74ur3x
-          vSwitchIds: ["vsw-t4n2ggi2w7dyt5lvvw72t"]
+          vSwitchIds: [ "vsw-t4n2ggi2w7dyt5lvvw72t" ]
           vpcId: vpc-t4nism8kix55znon23xyk
-        nasConfig: 
+        nasConfig:
           groupId: 0
           userId: 0
           mountPoints:
@@ -61,26 +61,26 @@ spec:
   # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
   # 用户可以使用此特性，达到DAG描述的效果
   tasks:
-  # 构建并部署
-  - name: build-and-deploy
-    context:
-      data:
-        # 打开任务执行，默认是关闭的
-        enable: true
-        # 同样可以在此处声明钉钉告警配置，修改告警模板
-        # dingdingNotification:
-        # 同样可以在此处声明或修改RunnerConfig
-        # runnerConfig:
-        # 执行步骤。下述步骤将会采用开源项目serverless-cd提供的engine进行执行
-        steps:
-          # 每个Task都是独立运行的Serverless实例，需要重新checkout
-          - plugin: "@serverless-cd/checkout"
-          # 同理，需要再次初始化s工具
-          - plugin: "@serverless-cd/s-setup"
-          # 执行s-deploy
-          - run: |
-              s deploy -t "s.yaml" --use-local --assume-yes --skip-push --debug
-              echo "Deploy by Serverless Devs success."
-    taskTemplate: serverless-runner-task
-    # 执行顺序，当前任务执行依赖runAfters任务都执行成功
-    runAfters: []
+    # 构建并部署
+    - name: build-and-deploy
+      context:
+        data:
+          # 打开任务执行，默认是关闭的
+          enable: true
+          # 同样可以在此处声明钉钉告警配置，修改告警模板
+          # dingdingNotification:
+          # 同样可以在此处声明或修改RunnerConfig
+          # runnerConfig:
+          # 执行步骤。下述步骤将会采用开源项目serverless-cd提供的engine进行执行
+          steps:
+            # 每个Task都是独立运行的Serverless实例，需要重新checkout
+            - plugin: "@serverless-cd/checkout"
+            # 同理，需要再次初始化s工具
+            - plugin: "@serverless-cd/s-setup"
+            # 执行s-deploy
+            - run: |
+                s deploy -t "s.yaml" --use-local --assume-yes --skip-push
+                echo "Deploy by Serverless Devs success."
+      taskTemplate: serverless-runner-task
+      # 执行顺序，当前任务执行依赖runAfters任务都执行成功
+      runAfters: []
