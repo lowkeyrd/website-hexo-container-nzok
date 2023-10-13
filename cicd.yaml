@@ -52,7 +52,7 @@ spec:
           mountPoints:
             - enableTLS: false
               serverAddr: 7335849b45-hqf65.ap-southeast-1.nas.aliyuncs.com:/application-test
-              mountDir: /mnt/docker-build
+              mountDir: /mnt/image-cache
         diskSize: 512
         cpu: 4
         memory: 8192
