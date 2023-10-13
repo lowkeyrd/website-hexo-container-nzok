@@ -1,5 +1,5 @@
 FROM node:16.15
-FROM gcr.io/google-appengine/debian9
+FROM gcr.io/google-appengine/debian9 as cache
 
 WORKDIR /workspace
 
