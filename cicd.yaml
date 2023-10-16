@@ -57,7 +57,7 @@ spec:
         cpu: 4
         memory: 8192
         timeout: 1800
-        debugMode: true
+        # debugMode: true
   # 要执行的任务，默认所有任务会一同尝试执行
   # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
   # 用户可以使用此特性，达到DAG描述的效果
