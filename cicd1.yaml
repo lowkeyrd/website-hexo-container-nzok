@@ -79,10 +79,11 @@ spec:
             # 同理，需要再次初始化s工具
             - plugin: "@serverless-cd/s-setup"
             # 执行s-deploy
-            - run: |
-                set -e
-                s deploy -t "s.yaml" --use-local --assume-yes --skip-push --env website-hexo-container-nzok-test-JBuC8S
-                echo "Deploy by Serverless Devs success."
+            - plugin: "@serverless-cd/s-deploy"
+            # - run: |
+            #     set -e
+            #     s deploy -t "s.yaml" --use-local --assume-yes --skip-push --env website-hexo-container-nzok-test-JBuC8S
+            #     echo "Deploy by Serverless Devs success."
       taskTemplate: serverless-runner-task
       # 执行顺序，当前任务执行依赖runAfters任务都执行成功
       runAfters: []
