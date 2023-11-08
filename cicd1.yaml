@@ -80,5 +80,14 @@ spec:
         data:
           displayName: 镜像构建
           enable: true
+          build: # 镜像构建
+            dockerfile: code/Dockerfile
+            image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test-springboot-demo:1.0
+            cacheDir: "/mnt/image-cache"
+          warm: # base镜像预热到缓存
+            images:
+            - registry.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1
+            cacheDir: "/mnt/image-cache"
+
       taskTemplate: serverless-runner-task
       runAfters: []
