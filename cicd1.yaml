@@ -89,5 +89,5 @@ spec:
             - registry.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1
             cacheDir: "/mnt/image-cache"
 
-      taskTemplate: serverless-runner-task
+      taskTemplate: build-image-task
       runAfters: []
