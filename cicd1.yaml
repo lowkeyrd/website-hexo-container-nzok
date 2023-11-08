@@ -68,6 +68,8 @@ spec:
         data:
           displayName: 部署
           enable: true
+          envVars:
+            GIT_COMMIT: <% .git.shortCommitId %>
           steps:
             - plugin: "@serverless-cd/checkout"
             - plugin: "@serverless-cd/s-setup"
@@ -82,7 +84,7 @@ spec:
           enable: true
           build: # 镜像构建
             dockerfile: code/Dockerfile
-            image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test-springboot-demo:1.0
+            image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test-springboot-demo:<% .git.shortCommitId %>
             cacheDir: "/mnt/image-cache"
           warm: # base镜像预热到缓存
             images:

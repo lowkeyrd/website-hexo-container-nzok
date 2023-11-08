@@ -25,7 +25,7 @@ services:
         memorySize: 512
         runtime: custom-container
         customContainerConfig:
-          image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test-springboot-demo:1.0'
+          image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test-springboot-demo:${env(GIT_COMMIT)}'
         timeout: 30
       triggers:
         - name: httpTrigger
