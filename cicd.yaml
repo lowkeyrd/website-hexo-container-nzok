@@ -16,7 +16,70 @@ spec:
   # 本次执行使用的流水线模板
   # 可以选择已有的模板，也可以在配置文件中自定义
   # 这里的例子为引用下文
-  templateName: mytemplate-<% .git.branch %>
+  templateSpec:
+    context:
+      data:
+        # 环境名称，推荐不同的环境使用不同的流水线模板
+        envName: default
+        deployFile: s.yaml
+        runnerConfig:
+          regionId: ap-southeast-1
+          logConfig:
+            logstore: serverless-application-9402efc249556e5b
+            project: serverless-application-9402efc249556e5b
+          vpcConfig:
+            securityGroupId: sg-t4n5nw95hdwfi54tfnfr
+            vSwitchIds:
+              - vsw-t4nuz466iajxa47msm4ve
+            vpcId: vpc-t4nj7i5625fmh3ncbdlze
+          nasConfig:
+            groupId: 0
+            userId: 0
+            mountPoints:
+              - enableTLS: false
+                mountDir: /mnt/image-cache
+                serverAddr: 777aa48427-oxr42.ap-southeast-1.nas.aliyuncs.com:/image-cache
+          diskSize: 10240
+          cpu: 8
+          memory: 32768
+          timeout: 1800
+          # debugMode: true
+          # 要执行的任务，默认所有任务会一同尝试执行
+          # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
+          # 用户可以使用此特性，达到DAG描述的效果
+    tasks:
+      # 构建并部署
+      - name: build-and-deploy
+        context:
+          data:
+            displayName: 部署
+            enable: true
+            envVars:
+              GIT_COMMIT: <% .git.shortCommitId %>
+            steps:
+              - plugin: "@serverless-cd/checkout"
+              - plugin: "@serverless-cd/s-setup"
+              - plugin: "@serverless-cd/s-deploy"
+        taskTemplate: serverless-runner-task
+        runAfters:
+          - name: build-push
+      - name: build-push
+        context:
+          data:
+            displayName: 镜像构建
+            enable: true
+            build: # 镜像构建
+              dockerfile: code/Dockerfile
+              image: demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:<% .git.shortCommitId %>
+              instanceId: cri-5oxhfi7lrqd04eyt
+              # cacheDir: "/mnt/image-cache"
+            # warm: # base镜像预热到缓存
+            #   images:
+            #   - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
+            #   cacheDir: "/mnt/image-cache"
+
+        taskTemplate: build-image-task
+        runAfters: []
 
 ---
 
@@ -32,66 +95,4 @@ description: 用于测试环境的流水线模板
 labels:
   myLabel: my-cicd-example
 spec:
-  context:
-    data:
-      # 环境名称，推荐不同的环境使用不同的流水线模板
-      envName: default
-      deployFile: s.yaml
-      runnerConfig:
-        regionId: ap-southeast-1
-        logConfig:
-          logstore: serverless-application-9402efc249556e5b
-          project: serverless-application-9402efc249556e5b
-        vpcConfig:
-          securityGroupId: sg-t4n5nw95hdwfi54tfnfr
-          vSwitchIds:
-            - vsw-t4nuz466iajxa47msm4ve
-          vpcId: vpc-t4nj7i5625fmh3ncbdlze
-        nasConfig:
-          groupId: 0
-          userId: 0
-          mountPoints:
-            - enableTLS: false
-              mountDir: /mnt/image-cache
-              serverAddr: 777aa48427-oxr42.ap-southeast-1.nas.aliyuncs.com:/image-cache
-        diskSize: 10240
-        cpu: 8
-        memory: 32768
-        timeout: 1800
-        # debugMode: true
-        # 要执行的任务，默认所有任务会一同尝试执行
-        # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
-        # 用户可以使用此特性，达到DAG描述的效果
-  tasks:
-    # 构建并部署
-    - name: build-and-deploy
-      context:
-        data:
-          displayName: 部署
-          enable: true
-          envVars:
-            GIT_COMMIT: <% .git.shortCommitId %>
-          steps:
-            - plugin: "@serverless-cd/checkout"
-            - plugin: "@serverless-cd/s-setup"
-            - plugin: "@serverless-cd/s-deploy"
-      taskTemplate: serverless-runner-task
-      runAfters:
-        - name: build-push
-    - name: build-push
-      context:
-        data:
-          displayName: 镜像构建
-          enable: true
-          build: # 镜像构建
-            dockerfile: code/Dockerfile
-            image: demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:<% .git.shortCommitId %>
-            instanceId: cri-5oxhfi7lrqd04eyt
-            # cacheDir: "/mnt/image-cache"
-          # warm: # base镜像预热到缓存
-          #   images:
-          #   - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
-          #   cacheDir: "/mnt/image-cache"
-
-      taskTemplate: build-image-task
-      runAfters: []
+  
