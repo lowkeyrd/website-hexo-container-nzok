@@ -4,7 +4,7 @@ kind: Pipeline
 # 推荐使用commitID与时间戳构造唯一的名称
 name: "p-<% .git.shortCommitId %>-<% .currentTimestampMs %>"
 # 一些任意的描述信息
-description: 'demo pipeline'
+description: 'demo pipeline1'
 # 添加任意的labels，用于查询过滤
 # 应用中心会在提交时也会添加其他labels
 labels:
