@@ -85,12 +85,13 @@ spec:
           enable: true
           build: # 镜像构建
             dockerfile: code/Dockerfile
-            image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:<% .git.shortCommitId %>
-            cacheDir: "/mnt/image-cache"
-          warm: # base镜像预热到缓存
-            images:
-            - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
-            cacheDir: "/mnt/image-cache"
+            image: demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:<% .git.shortCommitId %>
+            instanceId: cri-5oxhfi7lrqd04eyt
+            # cacheDir: "/mnt/image-cache"
+          # warm: # base镜像预热到缓存
+          #   images:
+          #   - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
+          #   cacheDir: "/mnt/image-cache"
 
       taskTemplate: build-image-task
       runAfters: []
