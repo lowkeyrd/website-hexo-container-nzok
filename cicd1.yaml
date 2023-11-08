@@ -86,7 +86,7 @@ spec:
             cacheDir: "/mnt/image-cache"
           warm: # base镜像预热到缓存
             images:
-            - registry.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1
+            - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1
             cacheDir: "/mnt/image-cache"
 
       taskTemplate: build-image-task

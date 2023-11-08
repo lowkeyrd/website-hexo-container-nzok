@@ -1,4 +1,4 @@
-FROM registry.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1 AS gpu-1
+FROM registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo/test:fengchongV1 AS gpu-1
 
 WORKDIR /app
 
