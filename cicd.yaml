@@ -43,46 +43,54 @@ spec:
           logstore: serverless-application-9402efc249556e5b
           project: serverless-application-9402efc249556e5b
         vpcConfig:
-          securityGroupId: sg-t4najwsfsvhbqv74ur3x
-          vSwitchIds: [ "vsw-t4n2ggi2w7dyt5lvvw72t" ]
-          vpcId: vpc-t4nism8kix55znon23xyk
+          securityGroupId: sg-t4n5nw95hdwfi54tfnfr
+          vSwitchIds:
+            - vsw-t4nuz466iajxa47msm4ve
+          vpcId: vpc-t4nj7i5625fmh3ncbdlze
         nasConfig:
           groupId: 0
           userId: 0
           mountPoints:
             - enableTLS: false
-              serverAddr: 7335849b45-hqf65.ap-southeast-1.nas.aliyuncs.com:/application-test
               mountDir: /mnt/image-cache
+              serverAddr: 777aa48427-oxr42.ap-southeast-1.nas.aliyuncs.com:/image-cache
         diskSize: 10240
-        cpu: 4
-        memory: 8192
+        cpu: 8
+        memory: 32768
         timeout: 1800
         # debugMode: true
-  # 要执行的任务，默认所有任务会一同尝试执行
-  # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
-  # 用户可以使用此特性，达到DAG描述的效果
+        # 要执行的任务，默认所有任务会一同尝试执行
+        # 执行会满足runAfters引入的先后约束，任务必须在runAfters声明的任务执行完毕后才可以被执行
+        # 用户可以使用此特性，达到DAG描述的效果
   tasks:
     # 构建并部署
     - name: build-and-deploy
       context:
         data:
-          # 打开任务执行，默认是关闭的
+          displayName: 部署
           enable: true
-          # 同样可以在此处声明钉钉告警配置，修改告警模板
-          # dingdingNotification:
-          # 同样可以在此处声明或修改RunnerConfig
-          # runnerConfig:
-          # 执行步骤。下述步骤将会采用开源项目serverless-cd提供的engine进行执行
+          envVars:
+            GIT_COMMIT: <% .git.shortCommitId %>
           steps:
-            # 每个Task都是独立运行的Serverless实例，需要重新checkout
             - plugin: "@serverless-cd/checkout"
-            # 同理，需要再次初始化s工具
             - plugin: "@serverless-cd/s-setup"
-            # 执行s-deploy
-            - run: |
-                set -e
-                s deploy -t "s.yaml" --use-local --assume-yes --skip-push
-                echo "Deploy by Serverless Devs success."
+            - plugin: "@serverless-cd/s-deploy"
       taskTemplate: serverless-runner-task
-      # 执行顺序，当前任务执行依赖runAfters任务都执行成功
+      runAfters:
+        - name: build-push
+    - name: build-push
+      context:
+        data:
+          displayName: 镜像构建
+          enable: true
+          build: # 镜像构建
+            dockerfile: code/Dockerfile
+            image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:<% .git.shortCommitId %>
+            cacheDir: "/mnt/image-cache"
+          warm: # base镜像预热到缓存
+            images:
+            - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
+            cacheDir: "/mnt/image-cache"
+
+      taskTemplate: build-image-task
       runAfters: []
