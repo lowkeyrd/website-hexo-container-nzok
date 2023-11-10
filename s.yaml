@@ -18,6 +18,11 @@ services:
         name: 'website'
         description: "Serverless Devs Website Service"
         role: 'acs:ram::${config(AccountID)}:role/AliyunFcDefaultRole'
+        vpcConfig:
+          securityGroupId: sg-t4n5nw95hdwfi54tfnfr
+          vSwitchIds:
+            - vsw-t4nuz466iajxa47msm4ve
+          vpcId: vpc-t4nj7i5625fmh3ncbdlze
       function:
         name: 'hexo-custom-container'
         description: "Serverless Devs Website hexo Function"
@@ -25,7 +30,9 @@ services:
         memorySize: 512
         runtime: custom-container
         customContainerConfig:
-          image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:${env(GIT_COMMIT)}'
+          # image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:${env(GIT_COMMIT)}'
+          image: 'demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:${env(GIT_COMMIT)_accelerated'
+          instanceId: cri-5oxhfi7lrqd04eyt
         timeout: 30
       triggers:
         - name: httpTrigger
