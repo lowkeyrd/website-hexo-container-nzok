@@ -70,12 +70,15 @@ spec:
             enable: true
             build: # 镜像构建
               dockerfile: code/Dockerfile
-              image: demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:<% .git.shortCommitId %>_accelerated
-              instanceID: cri-5oxhfi7lrqd04eyt
-              cacheDir: "/mnt/image-cache"
+              # 使用 <% .git.shortCommitId %> 将tag和commit相关联
+              image: registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:<% .git.shortCommitId %>
+               # ACREE 需要指定_accelerated 加速后缀
+              # image: demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:<% .git.shortCommitId %>_accelerated
+              # instanceID: cri-5oxhfi7lrqd04eyt
+              cacheDir: "/mnt/image-cache" # 使用base镜像的缓存路径
             warm: # base镜像预热到缓存
-              images:
+              images: # 需要预热的base镜像，可以指定多个
               - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
-              cacheDir: "/mnt/image-cache"
+              cacheDir: "/mnt/image-cache" # base镜像要缓存的路径
         taskTemplate: build-image-task
         runAfters: []
