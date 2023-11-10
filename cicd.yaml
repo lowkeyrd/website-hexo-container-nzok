@@ -8,7 +8,7 @@ description: 'demo pipeline'
 # 添加任意的labels，用于查询过滤
 # 应用中心会在提交时也会添加其他labels
 labels:
-  myLabel: my-cicd-example1
+  myLabel: my-cicd-example2
 spec:
   context:
     data:
