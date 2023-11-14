@@ -62,8 +62,8 @@ spec:
               - plugin: "@serverless-cd/s-deploy"
         taskTemplate: serverless-runner-task
         runAfters:
-          - name: build-push
-      - name: build-push
+          - name: image-build
+      - name: image-build
         context:
           data:
             displayName: 镜像构建
