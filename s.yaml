@@ -30,9 +30,9 @@ services:
         memorySize: 512
         runtime: custom-container
         customContainerConfig:
-          image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:${env(GIT_COMMIT)}'
+          # image: 'registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/serverless-terraform:${env(GIT_COMMIT)}'
           # ACREE 需要指定_accelerated 加速后缀
-          # image: 'demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:${env(GIT_COMMIT)_accelerated'
+          image: 'demo-registry-vpc.ap-southeast-1.cr.aliyuncs.com/fc-demo/demo-test:${env(GIT_COMMIT)_accelerated'
           # instanceID: cri-5oxhfi7lrqd04eyt
         timeout: 30
       triggers:
