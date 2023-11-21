@@ -81,8 +81,7 @@ spec:
               - registry-vpc.ap-southeast-1.aliyuncs.com/fc-demo2/nginx:prod_68b28050f017be91c4da4b18f9e894b67e489097
               cacheDir: "/mnt/image-cache" # base镜像要缓存的路径
         taskTemplate: build-image-task
-        runAfters:
-          - name: pre-check-approval
+        runAfters: []
       - name: pre-check-approval
         context:
           data:
