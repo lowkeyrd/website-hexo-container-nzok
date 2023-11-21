@@ -84,16 +84,15 @@ spec:
         runAfters:
           - name: pre-check-approval
       - name: pre-check-approval
-          context:
-            data:
-              displayName: "人工审核"
-              dingdingNotification:
-                # 关闭通知
-                enable: false
-              # 任务执行开关
-              enable: ${{ ctx.data.envVars.preCheck || false }}
-          # 采用内置的need-approval模板
-          taskTemplate: need-approval
-          runAfters:
-          # 需要在pre-check执行后才执行
-          - name: image-build
+        context:
+          data:
+            displayName: "人工审核"
+            dingdingNotification:
+              # 关闭通知
+              enable: false
+            # 任务执行开关
+            enable: ${{ ctx.data.envVars.preCheck || false }}
+        taskTemplate: need-approval
+        runAfters:
+        # 需要在pre-check执行后才执行
+        - name: image-build
